@@ -3,13 +3,19 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { join } from 'path';
 import dotenv from 'dotenv';
+import { ConfigService } from '@nestjs/config';
+import { ValidationPipe } from '@nestjs/common';
 dotenv.config({ path: '.env' });
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const configService = app.get(ConfigService);
   app.useStaticAssets(join(__dirname, '..', 'public')); //js, css, images
   app.setBaseViewsDir(join(__dirname, '..', 'views')); //view
   app.setViewEngine('ejs');
-  await app.listen(process.env.PORT ?? 3000);
+
+  app.useGlobalPipes(new ValidationPipe());
+
+  await app.listen(configService.get<string>('PORT') ?? 3000);
 }
 bootstrap();
