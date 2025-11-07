@@ -38,11 +38,16 @@ export class UsersService {
     });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    return await this.userModel.findByIdAndUpdate(
+      id,
+      { $set: updateUserDto },
+      { new: true },
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(id: string) {
+    if (!mongoose.Types.ObjectId.isValid(id)) return 'not found user';
+    return this.userModel.deleteOne({ _id: id });
   }
 }
