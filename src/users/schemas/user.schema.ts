@@ -28,6 +28,13 @@ export class User {
 
   @Prop()
   updatedAt: Date;
+
+  // phải tự khai báo 2 trường này nếu không thì mongoose sẽ không hoạt động
+  @Prop()
+  isDeleted: boolean;
+
+  @Prop()
+  DeletedAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
